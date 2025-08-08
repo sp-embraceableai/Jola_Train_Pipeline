@@ -8,6 +8,7 @@ import sys
 import os
 import torch
 import argparse
+import json
 from pathlib import Path
 
 # Add the parent directory to the path to import JOLA modules
@@ -17,6 +18,27 @@ from transformers import AutoTokenizer, TrainingArguments, EarlyStoppingCallback
 from jola.modeling_olmo2 import JoLAOlmo2Model
 from jola.trainers import JoLATrainer, make_data_collator
 from jola.dataset_sharegpt import ShareGPTDatasetFromFile
+
+def fix_model_config(model_dir):
+    """Fix model config to use standard architecture name"""
+    config_path = os.path.join(model_dir, "config.json")
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            
+            if 'architectures' in config and config['architectures']:
+                if 'JoLAOlmo2Model' in config['architectures']:
+                    config['architectures'] = ['Olmo2ForCausalLM']
+                    
+                    with open(config_path, 'w') as f:
+                        json.dump(config, f, indent=2)
+                    
+                    print(f"Fixed model config: {config_path}")
+                else:
+                    print(f"Model config already correct: {config_path}")
+        except Exception as e:
+            print(f"Warning: Could not fix model config: {e}")
 
 def setup_environment():
     """Setup training environment"""
@@ -243,6 +265,9 @@ def main():
         trainer.save_model(final_output_dir)
         tokenizer.save_pretrained(final_output_dir)
         print(f"Final model saved to {final_output_dir}")
+        
+        # Fix model config to use standard architecture name
+        fix_model_config(final_output_dir)
         
     except Exception as e:
         print(f"Training failed with error: {e}")

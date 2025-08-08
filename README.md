@@ -345,6 +345,25 @@ Provides:
 - W&B setup utilities
 - Configuration summary printing
 
+### Model Config Fix Utility (`scripts/fix_model_config.py`)
+
+Fixes model architecture in config.json files after JOLA training:
+- Converts "JoLAOlmo2Model" to "Olmo2ForCausalLM" for compatibility
+- Can process single files or entire directories
+- Automatically called by training script
+
+Usage:
+```bash
+# Fix single config file
+python scripts/fix_model_config.py path/to/config.json
+
+# Fix all configs in directory
+python scripts/fix_model_config.py path/to/model/directory
+
+# Fix without recursive search
+python scripts/fix_model_config.py path/to/directory --no-recursive
+```
+
 ## Outputs
 
 ### Model Checkpoints
@@ -394,6 +413,11 @@ Provides:
    - Verify model name is correct
    - Check internet connection for model download
    - Ensure sufficient disk space
+
+4. **Model Config Architecture Issue**
+   - After JOLA training, config.json may show "JoLAOlmo2Model" instead of "Olmo2ForCausalLM"
+   - This is automatically fixed by the training script
+   - Manual fix: `python scripts/fix_model_config.py path/to/model/directory`
 
 ### Performance Tips
 
