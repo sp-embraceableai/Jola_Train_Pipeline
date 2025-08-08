@@ -1,0 +1,96 @@
+# Configuration for embraceableAI/OLMo-2-1124-13B-Instruct-16k-Context-FT-ChatML
+# Optimized for A100 80GB GPU training
+
+model_config:
+  pretrained_model_name_or_path: "embraceableAI/OLMo-2-1124-13B-Instruct-16k-Context-FT-ChatML"
+  device: "cuda"
+  cache_dir: null  # Use default cache directory
+  applied_module: 'attention'
+  base_model_name: 'olmo2_13b_instruct_16k'
+
+training_config:
+  # Learning Rate & Optimization
+  learning_rate: 0.0001  # Lower LR for 13B model
+  lr_scheduler_type: 'cosine'
+  warmup_steps: 100
+  weight_decay: 0.01
+  
+  # Batch Sizes (optimized for A100 80GB)
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4  # Effective batch size = 4 * 4 = 16
+  
+  # Training Duration
+  num_train_epochs: 10
+  max_steps: null  # Use epochs instead
+  
+  # Evaluation & Saving
+  evaluation_strategy: 'epoch'
+  save_strategy: 'epoch'
+  load_best_model_at_end: true
+  save_total_limit: 3
+  metric_for_best_model: 'eval_loss'
+  greater_is_better: false
+  
+  # Logging & Monitoring
+  report_to: "wandb"
+  logging_strategy: "steps"
+  logging_steps: 10
+  logging_first_step: true
+  
+  # Reproducibility
+  seed: 42
+  dataloader_pin_memory: true
+  
+  # Training Mode
+  do_train: true
+  do_eval: true
+  do_predict: false
+  
+  # Precision & Memory Optimization
+  bf16: true  # Use bfloat16 for A100
+  fp16: false
+  dataloader_num_workers: 4
+  
+  # Gradient Clipping
+  max_grad_norm: 1.0
+  
+  # Output
+  output_dir: './outputs/olmo2_13b_instruct_16k'
+  overwrite_output_dir: true
+  
+  # Checkpointing
+  save_steps: 500
+  eval_steps: 500
+  
+  # Early Stopping
+  early_stopping_patience: 3
+  early_stopping_threshold: 0.001
+
+data_config:
+  train_size: 5000  # Increased for 13B model
+  valid_size: 500
+  test_size: 500
+  task_name: "sharegpt"
+  data_path: "data/sharegpt_training_data_combined_final_solution_correctness_100.jsonl"
+  format_type: "chatml"
+  max_length: 30000  # Extended context length for 30k tokens
+  split_ratio: 0.8
+
+jola_config:
+  gate_lambda: 0.00004
+  gate_scheduler: "expon"
+  gate_warmup_steps: 100
+
+# Hardware Configuration
+hardware_config:
+  device_map: "auto"
+  torch_dtype: "bfloat16"
+  use_flash_attention: true
+  use_gradient_checkpointing: true
+  
+# Logging Configuration
+logging_config:
+  project_name: "jola-olmo2-13b-training"
+  run_name: "olmo2-13b-instruct-16k-sharegpt"
+  tags: ["olmo2", "13b", "jola", "sharegpt"]

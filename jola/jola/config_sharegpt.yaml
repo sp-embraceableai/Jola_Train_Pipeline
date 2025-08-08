@@ -1,0 +1,39 @@
+model_config:
+  pretrained_model_name_or_path: "sp-embraceable/OLMo-2-1124-13B-Instruct-32k-Context-ChatML"
+  device: "cpu"
+  cache_dir: "./cache"
+  applied_module: 'attention'
+  base_model_name: 'olmo2_13B_instruct_sharegpt'
+
+training_config:
+  learning_rate: 0.003
+  lr_scheduler_type: 'cosine'
+  warmup_steps: 100
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  num_train_epochs: 3
+  evaluation_strategy: 'epoch'
+  save_strategy: 'epoch'
+  load_best_model_at_end: True
+  save_total_limit: 1
+  report_to: "wandb"
+  logging_strategy: "steps"
+  logging_steps: 50
+  seed: 42
+  do_train: True
+  do_eval: True
+  bf16: True
+  output_dir: './output_sharegpt'
+  gradient_accumulation_steps: 4
+  max_grad_norm: 1.0
+
+data_config:
+  train_size: 2000
+  valid_size: 200
+  test_size: 200
+  format_type: "chatml"
+  data_path: "sharegpt_training_data_combined_final_solution_correctness_100.jsonl"
+
+jola_config:
+  gate_lambda: 0.00004
+  gate_scheduler: "expon"
