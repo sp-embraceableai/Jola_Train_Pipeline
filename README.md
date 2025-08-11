@@ -226,11 +226,17 @@ JOLA-LLM/
 
 ## Hardware Requirements
 
-### Recommended Configuration
+### Recommended Configuration (GPU)
 - **GPU**: NVIDIA A100 80GB (or similar high-memory GPU)
 - **System RAM**: 128GB+
 - **Storage**: 100GB+ free space for model and checkpoints
 - **CUDA**: 11.8+ with cuDNN
+
+### CPU Configuration (Alternative)
+- **CPU**: Modern multi-core processor (16+ cores recommended)
+- **System RAM**: 64GB+ (32GB minimum)
+- **Storage**: 50GB+ free space
+- **Note**: Training will be 10-100x slower than GPU
 
 ### Memory Optimization Features
 - **Precision**: bfloat16 (optimized for A100)
@@ -255,8 +261,14 @@ python scripts/setup_project.py
 
 ### 3. Start Training
 
+For GPU training (recommended):
 ```bash
 python scripts/train_olmo2_13b.py
+```
+
+For CPU training (slower, for testing/compatibility):
+```bash
+python scripts/train_olmo2_13b_cpu.py
 ```
 
 ### 4. Monitor Training
@@ -330,12 +342,34 @@ Features:
 
 Usage:
 ```bash
-# Standard training
+# Standard GPU training
 python scripts/train_olmo2_13b.py
 
-# Training without W&B logging
+# GPU training without W&B logging
 python scripts/train_olmo2_13b.py --no-wandb
 ```
+
+### CPU Training Script (`scripts/train_olmo2_13b_cpu.py`)
+
+Features:
+- CPU-optimized configuration
+- Reduced batch sizes and shorter sequences
+- Memory-efficient settings
+- Smaller dataset for testing
+
+Usage:
+```bash
+# CPU training (much slower)
+python scripts/train_olmo2_13b_cpu.py
+```
+
+**CPU Training Specifications:**
+- Batch Size: 1 (with gradient accumulation of 8)
+- Max Sequence Length: 1,024 tokens
+- Training Data: 100 examples
+- Validation Data: 20 examples
+- Precision: float32
+- No Flash Attention or mixed precision
 
 ### Configuration Utilities (`scripts/config_utils.py`)
 
