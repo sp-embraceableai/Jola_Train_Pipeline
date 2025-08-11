@@ -1,0 +1,33 @@
+# Include the README and other documentation
+include README.md
+include LICENSE
+include requirements.txt
+include pyproject.toml
+include setup.py
+include MANIFEST.in
+
+# Include configuration files
+recursive-include configs *.yaml *.yml
+
+# Include scripts
+recursive-include scripts *.py
+
+# Include JOLA framework files
+recursive-include jola *.py *.yaml *.yml *.md
+
+# Exclude cache and output directories
+recursive-exclude jola/cache *
+recursive-exclude jola/outputs *
+recursive-exclude jola/logs *
+recursive-exclude jola/wandb *
+recursive-exclude jola/output_* *
+
+# Exclude system files
+global-exclude .DS_Store
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .git*
+global-exclude *.so
+global-exclude *.egg-info

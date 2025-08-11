@@ -25,6 +25,17 @@ Email: wen.lai@tum.de
 - [Citation](#citation)
 
 ## Installation
+
+### Option 1: Install JOLA Training Pipeline (This Repository)
+```bash
+# Install with GPU support (recommended)
+pip install "git+https://github.com/sp-embraceableai/Jola_Train_Pipeline.git[gpu]"
+
+# Or install for CPU training
+pip install "git+https://github.com/sp-embraceableai/Jola_Train_Pipeline.git"
+```
+
+### Option 2: Install Base JOLA Framework
 + Install **`jola`** from pip:
 ```bash
 pip install jola
@@ -33,6 +44,15 @@ pip install jola
 ```bash
 pip install git+https://github.com/wenlai-lavine/jola.git
 ```
+
+### Option 3: Manual Installation
+```bash
+git clone https://github.com/sp-embraceableai/Jola_Train_Pipeline.git
+cd Jola_Train_Pipeline
+pip install -r requirements.txt
+```
+
+See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 
 ## Supported Models
 JoLA currently supports the following model architectures:
@@ -263,11 +283,19 @@ python scripts/setup_project.py
 
 For GPU training (recommended):
 ```bash
+# Using installed command
+jola-train
+
+# Or using Python script directly
 python scripts/train_olmo2_13b.py
 ```
 
 For CPU training (slower, for testing/compatibility):
 ```bash
+# Using installed command
+jola-train-cpu
+
+# Or using Python script directly
 python scripts/train_olmo2_13b_cpu.py
 ```
 

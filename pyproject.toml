@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jola-train-pipeline"
+version = "1.0.0"
+description = "JOLA Training Pipeline for OLMo2 13B model with A100 GPU optimization"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "sp-embraceable", email = "contact@embraceable.ai"}
+]
+maintainers = [
+    {name = "sp-embraceable", email = "contact@embraceable.ai"}
+]
+keywords = [
+    "machine learning",
+    "deep learning", 
+    "transformers",
+    "language models",
+    "fine-tuning",
+    "jola",
+    "olmo2",
+    "parameter efficient",
+    "low resource"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.45.0",
+    "datasets>=2.14.0",
+    "accelerate>=0.20.0",
+    "jola",
+    "pandas>=1.5.0",
+    "numpy>=1.24.0",
+    "PyYAML>=6.0",
+    "wandb>=0.15.0",
+    "tensorboard>=2.13.0",
+    "tqdm>=4.65.0",
+    "psutil>=5.9.0"
+]
+
+[project.optional-dependencies]
+gpu = [
+    "flash-attn>=2.3.0",
+    "xformers>=0.0.20",
+    "ninja>=1.11.0"
+]
+dev = [
+    "pytest>=6.0",
+    "black>=22.0",
+    "flake8>=4.0",
+    "isort>=5.0"
+]
+all = [
+    "jola-train-pipeline[gpu,dev]"
+]
+
+[project.scripts]
+jola-train = "scripts.train_olmo2_13b:main"
+jola-train-cpu = "scripts.train_olmo2_13b_cpu:main"
+jola-fix-config = "scripts.fix_model_config:main"
+
+[project.urls]
+Homepage = "https://github.com/sp-embraceableai/Jola_Train_Pipeline"
+Repository = "https://github.com/sp-embraceableai/Jola_Train_Pipeline"
+Documentation = "https://github.com/sp-embraceableai/Jola_Train_Pipeline#readme"
+"Bug Reports" = "https://github.com/sp-embraceableai/Jola_Train_Pipeline/issues"
+
+[tool.setuptools]
+packages = ["scripts", "configs"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"*" = ["*.yaml", "*.yml", "*.md", "*.txt"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
